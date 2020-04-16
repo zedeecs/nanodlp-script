@@ -1,0 +1,11 @@
+; 适用于 STEK X-CUBE 8.9 250mm
+; Printer Settings
+; 打印完成后，动态升高，防止超出 Z 行程撞头
+
+M107
+G90
+G1 Z{(250-[[LayerPosition]])/250*100+[[LayerPosition]]} F150 P1
+[[WaitForDoneMessage]]
+[[PositionSet {(250-[[LayerPosition]])/250*100+[[LayerPosition]]}]]
+M84
+M107
