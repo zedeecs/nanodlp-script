@@ -5,14 +5,14 @@
 
 
 G1 Z{[[LayerPosition]]+((min([[TotalSolidArea]],23040)/23040)**0.4*2+1)}  F100 P1  ; DownFast
-; Z高度根据 [[TotalSolidArea]] 动态调整， (Z Distance >= 1) and (Z Distance <=3)
+; Z高度根据 [[TotalSolidArea]] 动态调整， Z Distance >= 1 and Z Distance <=3
 ; 此处 F100 可自行修改
 
 [[WaitForDoneMessage]]
 
 G1 Z[[LayerPosition]] F{(1-min([[TotalSolidArea]],23040)/23040)**3*15+5} P1  ; DownSlow
 ; F 参数根据 [[TotalSolidArea]] 动态调整
-; (F >=5) and (F < 20)
+; F >=5 and F < 20
 
 [[WaitForDoneMessage]]
 [[PositionSet [[LayerPosition]]]]
