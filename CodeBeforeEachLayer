@@ -1,16 +1,18 @@
 ; Resin Profiles
 ; 两阶段下沉：1，快速下降；2，接近时减慢速度。
-; 影响因素：[[TotalSolidArea]]
+; 影响因素：[[TotalSolidArea]] and [[LayerNumber]]
 ; 23040 == 192*120 Area
 
 
-G1 Z{[[LayerPosition]]+((min([[TotalSolidArea]],23040)/23040)**0.4*2+1)}  F100 P1  ; DownFast
+G1 Z{[[LayerPosition]]+max((([[LayerNumber]]<=10)*3),((min([[TotalSolidArea]],23040)/23040)**0.4*2+1))}  F100 P1  ; DownFast
 ; Z高度根据 [[TotalSolidArea]] 动态调整， Z Distance >= 1 and Z Distance <=3
 ; 此处 F100 可自行修改
+; if [[LayerNumber]] <= 10, Z Distance == 3
+; else Z Distance == ((min([[TotalSolidArea]],23040)/23040)**0.4*2+1))
 
 [[WaitForDoneMessage]]
 
-G1 Z[[LayerPosition]] F{(1-min([[TotalSolidArea]],23040)/23040)**3*15+5} P1  ; DownSlow
+G1 Z[[LayerPosition]] F{max(5,([[LayerNumber]]>10)*((1-min([[TotalSolidArea]],23040)/23040)**3*15+5))} P1  ; DownSlow
 ; F 参数根据 [[TotalSolidArea]] 动态调整
 ; F >=5 and F < 20
 

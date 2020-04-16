@@ -1,15 +1,17 @@
 ; Resin Profiles
 ; 两阶段抬升：1，低速抬升；2，快速抬升（主要应对大面积固化时不脱膜）。
-; 影响因素：[[TotalSolidArea]]
+; 影响因素：[[TotalSolidArea]] and [[LayerNumber]]
 ; 23040 == 192*120 Area
 
-G1 Z{min(250,([[LayerPosition]]+max(2,min([[TotalSolidArea]],23040)/2304)))} F35 P1 ; LiftSlow
+G1 Z{min(250,([[LayerPosition]]+max(([[LayerNumber]]<=10)*10,min([[TotalSolidArea]],23040)/23040*8+2)))} F35 P1 ; LiftSlow
 ; Z Position max 250
 ; Z LiftSlow <= 10 and Z LiftSlow >= 2
+; if [[LayerNumber]] <= 10, Z Distance == 10
+; else Z Distance == min([[TotalSolidArea]],23040)/23040*8+2
 
 [[WaitForDoneMessage]]
 
-G1 Z{min(250,([[LayerPosition]]+max(max([[ZLiftDistance]],6),(min([[TotalSolidArea]],23040)/23040)**0.25*14)))} F120 P1 ; LiftFast
+G1 Z{min(250,([[LayerPosition]]+max([[ZLiftDistance]],(min([[TotalSolidArea]],23040)/23040)**0.25**([[LayerNumber]]>10)*8+6)))} F120 P1 ; LiftFast
 ; Z Position max 250
 ; Z LiftFast <= 14 and Z LiftFast >= 6
 ; F120 可任意修改以节省时间
